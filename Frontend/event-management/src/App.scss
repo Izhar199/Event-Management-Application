@@ -1,0 +1,101 @@
+/* General form styling */
+form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+form div {
+    margin-bottom: 16px;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+textarea {
+    resize: vertical;
+    height: 100px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    margin: 5px 0;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button.cancel {
+    background-color: #dc3545;
+}
+
+button.cancel:hover {
+    background-color: #c82333;
+}
+
+/* Style for the Add New Event button */
+button.add-event {
+    padding: 12px 24px;
+    font-size: 16px;
+    background-color: #28a745;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+button.add-event:hover {
+    background-color: #218838;
+}
+
+/* Styling the event list */
+.event-list {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.event-card {
+    border: 1px solid #ddd;
+    padding: 16px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 220px;
+}
+
+.event-card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.event-card p {
+    color: #666;
+}
