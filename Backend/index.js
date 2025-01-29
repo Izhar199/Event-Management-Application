@@ -3,7 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const connectDB = require('./config/db');
 require('dotenv').config();
-
+const authRoutes = require('./routes/authRoutes');
 const app = express();
 
 // Connect to MongoDB
@@ -14,6 +14,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/events', require('./routes/eventRoutes'));
 
 // Start server
