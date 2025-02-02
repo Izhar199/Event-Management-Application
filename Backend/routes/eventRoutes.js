@@ -11,8 +11,9 @@ router.post('/add', authMiddleware, async (req, res) => {
         const newEvent = new Event({
             title, description, location, date, createdBy: req.admin.id
         });
+        console.log(newEvent)
         await newEvent.save();
-        res.status(201).json({ message: 'Event created successfully' });
+        res.json(newEvent);
     } catch (error) {
         res.status(500).json({ error: 'Error creating event' });
     }
@@ -21,12 +22,28 @@ router.post('/add', authMiddleware, async (req, res) => {
 // Get All Events
 router.get('/', async (req, res) => {
     try {
-        const events = await Event.find();
+        const { search, date, location } = req.query;
+        let query = {};
+
+        if (search) {
+            query.title = { $regex: search, $options: 'i' }; // Case-insensitive search
+        }
+
+        if (date) {
+            query.date = date;
+        }
+
+        if (location) {
+            query.location = { $regex: location, $options: 'i' };
+        }
+
+        const events = await Event.find(query);
         res.json(events);
     } catch (error) {
         res.status(500).json({ error: 'Error fetching events' });
     }
 });
+
 
 // Get Single Event
 router.get('/:id', async (req, res) => {
