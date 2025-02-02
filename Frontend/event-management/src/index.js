@@ -5,7 +5,9 @@ import App from './App';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
+import Events from './pages/Events';
 import { AuthProvider } from "./context/AuthContext";
+import Navbar from "./components/Navbar";
 import './index.scss';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -24,8 +26,10 @@ root.render(
     <React.StrictMode>
         <AuthProvider>
             <Router>
+
                 <Routes>
                     <Route path="/" element={<App />} />
+                    <Route path="/events" element={<Events />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/dashboard" element={<Dashboard />} />

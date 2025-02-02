@@ -1,0 +1,57 @@
+@import "./variables"; // Import global styles
+
+.app-container {
+    text-align: center;
+    margin-top: 100px;
+    font-family: Arial, sans-serif;
+    background-color: $background-color;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.app-title {
+    color: $text-color;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.app-description {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: darken($text-color, 10%);
+}
+
+.button-group {
+    display: flex;
+    gap: 20px;
+}
+
+.btn {
+    padding: $button-padding;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: $button-border-radius;
+    border: none;
+    transition: background 0.3s ease-in-out;
+
+    &.login {
+        background-color: $primary-color;
+        color: white;
+
+        &:hover {
+            background-color: darken($primary-color, 10%);
+        }
+    }
+
+    &.signup {
+        background-color: $warning-color;
+        color: black;
+
+        &:hover {
+            background-color: darken($warning-color, 10%);
+        }
+    }
+}
