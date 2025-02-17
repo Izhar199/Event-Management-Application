@@ -1,14 +1,14 @@
 import { useContext } from "react";
 import { AuthContext } from '../context/AuthContext';
-
+import './Navbar.scss';
 const Navbar = () => {
     const { admin, logout } = useContext(AuthContext);
 
     return (
-        <nav>
+        <nav className="navbar">
             {/* <h2>Event Manager</h2> */}
             {admin &&
-                <button onClick={logout}>Logout</button>
+                <button className="logout-btn" onClick={logout}>Logout</button>
             }
         </nav>
     );

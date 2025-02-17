@@ -1,11 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import EventCard from '../components/EventCard';
 import './Events.scss'; // Make sure this is imported
 import Navbar from '../components/Navbar';
+import { AuthContext } from '../context/AuthContext';
+import Favorites from './Favorite';
 function Events() {
+    const { admin } = useContext(AuthContext);
     const [events, setEvents] = useState([]);
+    const [favorites, setFavorites] = useState([]);
     const [showForm, setShowForm] = useState(false);
+    const [showFav, setShowFav] = useState(false);
     const [newEvent, setNewEvent] = useState({
         title: '',
         date: '',
@@ -16,18 +21,10 @@ function Events() {
     const [date, setDate] = useState("");
     const [location, setLocation] = useState("");
 
-    // useEffect(() => {
-    //     axios.get('http://localhost:5000/api/events', {
-    //         params: { search, date, location }
-    //     }) // Adjust URL to your backend
-    //         .then(response => {
-    //             setEvents(response.data);
-    //         })
-    //         .catch(error => console.error('Error fetching events:', error));
-    // }, [search, date, location]);
     useEffect(() => {
         fetchEvents();
-    }, []);
+        if (admin) fetchFavorites();
+    }, [admin]);
     const fetchEvents = async () => {
         try {
             const response = await axios.get("http://localhost:5000/api/events", {
@@ -38,7 +35,26 @@ function Events() {
             console.error("Error fetching events", error);
         }
     };
+    const fetchFavorites = async () => {
+        try {
+            const id = localStorage.getItem('id');
+            const response = await axios.get(`http://localhost:5000/api/events/${id}/favorites`);
+            setFavorites(response.data);
+        } catch (error) {
+            console.error("Error fetching favorites", error);
+        }
+    };
+    const toggleFavorite = async (eventId) => {
+        try {
 
+            const id = localStorage.getItem('id');
+            await axios.post(`http://localhost:5000/api/events/favorite/${eventId}`, { userId: id });
+
+            fetchFavorites(); // Refresh favorites
+        } catch (error) {
+            console.error("Error toggling favorite", error);
+        }
+    };
     // Handle form input changes
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -64,7 +80,7 @@ function Events() {
 
             // Update the events state to include the new event
             setEvents((prevEvents) => [...prevEvents, response.data]);
-            console.log(response, 'eeeeeeeeee')
+
             // Reset the form and hide it
             setNewEvent({ title: '', date: '', description: '', location: '' });
             setShowForm(false);
@@ -72,15 +88,34 @@ function Events() {
             console.error('Error adding new event:', error);
         }
     };
+    const updateEvent = async (updatedEvent) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/events/${updatedEvent._id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updatedEvent),
+            });
+
+            if (!response.ok) throw new Error("Failed to update event");
+
+            const updatedData = await response.json();
+
+            // Update the event list in state
+            setEvents(events.map((ev) => (ev._id === updatedEvent._id ? updatedData : ev)));
+        } catch (error) {
+            console.error("Error updating event:", error);
+        }
+    };
 
     return (
         <div className="App">
             <Navbar />
-            <h1>Event Management</h1>
+            <h1 className='header'>Event Management</h1>
 
             {/* Button to open the form */}
             <button className="add-event" onClick={() => setShowForm(true)}>Add New Event</button>
-
+            <button className="add-event" onClick={() => setShowFav(true)}>Favorite</button>
+            {showFav && <button className="add-event" onClick={() => setShowFav(false)}>Show Events</button>}
             {/* Form to add a new event */}
             {showForm && (
                 <form onSubmit={handleSubmit}>
@@ -152,7 +187,7 @@ function Events() {
             </div>}
 
             {/* Display all events */}
-            {!showForm && <div className="event-list">
+            {!showForm && !showFav && <div className="event-list">
                 {events.map((event, index) => (
                     <EventCard
                         key={index}
@@ -160,9 +195,15 @@ function Events() {
                         date={event.date}
                         description={event.description}
                         location={event.location}
+                        toggleFavorite={toggleFavorite}
+                        favorites={favorites}
+                        event={event}
+                        user={admin}
+                        onUpdate={updateEvent}
                     />
                 ))}
             </div>}
+            {showFav && <Favorites />}
         </div>
     );
 }

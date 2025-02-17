@@ -7,6 +7,7 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Events from './pages/Events';
 import { AuthProvider } from "./context/AuthContext";
+import Favorites from "./pages/Favorite";
 import Navbar from "./components/Navbar";
 import './index.scss';
 
@@ -33,6 +34,7 @@ root.render(
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/favorites" element={<Favorites />} />
                 </Routes>
             </Router>
         </AuthProvider>

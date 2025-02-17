@@ -140,3 +140,45 @@ button.add-event:hover {
         }
     }
 }
+
+.header {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: bold;
+    color: #ffffff;
+    /* White text for contrast */
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    padding: 40px 20px;
+    background: rgba(0, 0, 0, 0.6);
+    /* Dark translucent background */
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+    /* Blurred effect */
+    width: 80%;
+    margin: 20px auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+/* Add a glow effect on hover */
+.header:hover {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+/* Smooth fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.add-event {
+    margin-right: 10px;
+}

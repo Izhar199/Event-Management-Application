@@ -20,3 +20,40 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 }
+
+/* General Button Styling */
+.button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #007bff;
+    /* Primary blue */
+    color: white;
+    margin: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover Effect */
+.button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Active (Click) Effect */
+.button:active {
+    background-color: #003d80;
+    transform: scale(0.98);
+}
+
+/* Favorite Button (Custom Color) */
+.favorite-btn {
+    background-color: #ffcc00;
+    /* Yellow */
+    color: black;
+}
+
+.favorite-btn:hover {
+    background-color: #e6b800;
+}
