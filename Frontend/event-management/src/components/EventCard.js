@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import './EventCard.scss';
-function EventCard({ title, date, description, location, toggleFavorite, favorites, event, user, onUpdate }) {
+function EventCard({ title, date, description, location, toggleFavorite, favorites, event, user, onUpdate, onDelete }) {
     const [isEditing, setIsEditing] = useState(false);
-    const [updatedEvent, setUpdatedEvent] = useState({ ...event });
+    // Convert date to YYYY-MM-DD format (needed for input[type="date"])
+    const formattedDate = event.date ? new Date(event.date).toISOString().split("T")[0] : "";
+    const [updatedEvent, setUpdatedEvent] = useState({ ...event, date: formattedDate });
 
     const handleChange = (e) => {
         setUpdatedEvent({ ...updatedEvent, [e.target.name]: e.target.value });
@@ -32,19 +34,29 @@ function EventCard({ title, date, description, location, toggleFavorite, favorit
 
                     )}
                     {user && (
-                        <button className='button' onClick={() => setIsEditing(true)}>Edit</button>
+                        <button className='button' onClick={() => setIsEditing(true)}>✏️ Edit</button>
+                    )
+                    }
+                    {user && (
+                        <button onClick={() => onDelete(event._id)} className="delete-btn">🗑️ Delete</button>
                     )
                     }
                 </div>
             </>) : (
-                <form onSubmit={handleSubmit}>
-                    <input name="title" value={updatedEvent.title} onChange={handleChange} />
-                    <input name="date" value={updatedEvent.date} onChange={handleChange} />
-                    <input name="description" value={updatedEvent.description} onChange={handleChange} />
-                    <input name="location" value={updatedEvent.location} onChange={handleChange} />
-                    <button type="submit">Save</button>
-                    <button onClick={() => setIsEditing(false)}>Cancel</button>
-                </form>
+                <div className="modal">
+                    <div className="modal-content">
+                        <button className="close-btn" onClick={() => setIsEditing(false)}>✖</button>
+                        <form className="edit-form" onSubmit={handleSubmit}>
+                            <input name="title" value={updatedEvent.title} onChange={handleChange} placeholder="Event Title" />
+                            <input name="date" type="date" value={updatedEvent.date} onChange={handleChange} />
+                            <input name="description" value={updatedEvent.description} onChange={handleChange} placeholder="Event Description" />
+                            <input name="location" value={updatedEvent.location} onChange={handleChange} placeholder="Location" />
+
+                            <button type="submit" className="save-btn">Save Changes</button>
+                            <button type="button" className="cancel-btn" onClick={() => setIsEditing(false)}>Cancel</button>
+                        </form>
+                    </div>
+                </div>
             )
             }
         </div>

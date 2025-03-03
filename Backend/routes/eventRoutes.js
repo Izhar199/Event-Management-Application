@@ -12,7 +12,7 @@ router.post('/add', authMiddleware, async (req, res) => {
         const newEvent = new Event({
             title, description, location, date, createdBy: req.admin.id
         });
-        console.log(newEvent)
+
         await newEvent.save();
         res.json(newEvent);
     } catch (error) {
@@ -108,7 +108,7 @@ router.post("/favorite/:eventId", async (req, res) => {
 router.get("/:userId/favorites", async (req, res) => {
     try {
         const { userId } = req.params;
-        console.log(userId)
+
         const user = await Admin.findById(userId).populate("favorites"); // Populate event details
 
         if (!user) {
@@ -121,6 +121,19 @@ router.get("/:userId/favorites", async (req, res) => {
     }
 });
 
+router.put("/:id", authMiddleware, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updatedEvent = await Event.findByIdAndUpdate(id, req.body, { new: true });
 
+        if (!updatedEvent) {
+            return res.status(404).json({ message: "Event not found" });
+        }
+        console.log(updatedEvent)
+        res.status(200).json(updatedEvent);
+    } catch (error) {
+        res.status(500).json({ message: "Error updating event", error });
+    }
+});
 
 module.exports = router;

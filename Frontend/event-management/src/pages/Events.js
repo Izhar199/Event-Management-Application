@@ -90,9 +90,10 @@ function Events() {
     };
     const updateEvent = async (updatedEvent) => {
         try {
+            const token = localStorage.getItem("token");
             const response = await fetch(`http://localhost:5000/api/events/${updatedEvent._id}`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
                 body: JSON.stringify(updatedEvent),
             });
 
@@ -104,6 +105,24 @@ function Events() {
             setEvents(events.map((ev) => (ev._id === updatedEvent._id ? updatedData : ev)));
         } catch (error) {
             console.error("Error updating event:", error);
+        }
+    };
+    const handleDelete = async (eventId) => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await fetch(`http://localhost:5000/api/events/${eventId}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+            });
+
+            if (response.ok) {
+                setEvents(events.filter(event => event._id !== eventId));
+                alert("Event deleted successfully!");
+            } else {
+                alert("Failed to delete the event.");
+            }
+        } catch (error) {
+            console.error("Error deleting event:", error);
         }
     };
 
@@ -200,6 +219,7 @@ function Events() {
                         event={event}
                         user={admin}
                         onUpdate={updateEvent}
+                        onDelete={handleDelete}
                     />
                 ))}
             </div>}
