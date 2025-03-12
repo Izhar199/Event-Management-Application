@@ -3,10 +3,10 @@ import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 function Dashboard() {
-    const { admin, logout } = useContext(AuthContext);
+    const { user, logout } = useContext(AuthContext);
     const navigate = useNavigate();
 
-    if (!admin) return <h2>Access Denied. Please Login.</h2>;
+    if (!user) return <h2>Access Denied. Please Login.</h2>;
 
     return (
         <div>

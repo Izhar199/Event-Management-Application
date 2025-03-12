@@ -1,22 +1,20 @@
 const express = require('express');
 const Event = require('../models/Event');
 const Admin = require('../models/Admin');
-const authMiddleware = require('../middleware/authMiddleware');
+const Booking = require("../models/Bookings");
+const { authenticate, authorizeAdmin } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
 // Create an Event (Protected)
-router.post('/add', authMiddleware, async (req, res) => {
+router.post("/add", async (req, res) => {
     try {
-        const { title, description, location, date } = req.body;
-        const newEvent = new Event({
-            title, description, location, date, createdBy: req.admin.id
-        });
-
+        const { title, date, description, location } = req.body;
+        const newEvent = new Event({ title, date, description, location });
         await newEvent.save();
-        res.json(newEvent);
-    } catch (error) {
-        res.status(500).json({ error: 'Error creating event' });
+        res.status(201).json(newEvent);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 });
 
@@ -44,10 +42,74 @@ router.get('/', async (req, res) => {
         res.status(500).json({ error: 'Error fetching events' });
     }
 });
+// ✅ Cancel booking route
+router.delete("/:id/cancel", authenticate, async (req, res) => {
+    try {
+        const userId = req.user.id; // ✅ Get logged-in user ID
+        const event = await Event.findById(req.params.id);
 
+        if (!event) return res.status(404).json({ message: "Event not found" });
+
+        // ✅ Check if user has booked the event
+        if (!event.bookings.includes(userId)) {
+            return res.status(400).json({ message: "You have not booked this event" });
+        }
+
+        // ✅ Remove user ID from bookings array
+        event.bookings = event.bookings.filter(id => id.toString() !== userId);
+        await event.save();
+
+        res.status(200).json({ message: "Booking canceled successfully" });
+    } catch (error) {
+        console.error("❌ Error canceling booking:", error);
+        res.status(500).json({ message: "Server error", error });
+    }
+});
+//  Book an event
+router.post("/:id/book", authenticate, async (req, res) => {
+    try {
+        const event = await Event.findById(req.params.id);
+        if (!event) return res.status(404).json({ message: "Event not found" });
+
+        // ✅ Ensure req.user is correctly populated
+        if (!req.user || !req.user.id) {
+            return res.status(401).json({ message: "Unauthorized: User not found" });
+        }
+
+        if (event.bookings.includes(req.user.id)) {
+            return res.status(400).json({ message: "You have already booked this event" });
+        }
+
+        event.bookings.push(req.user.id);
+        await event.save();
+        res.status(200).json({ message: "Event booked successfully!" });
+    } catch (error) {
+        console.error("Booking Error:", error);
+        res.status(500).json({ message: "Server error", error });
+    }
+});
+
+//  Get events with booking details
+router.get("/booked", authenticate, async (req, res) => {
+    try {
+        if (!req.user || !req.user.id) {
+            return res.status(401).json({ message: "Unauthorized: No user ID found" });
+        }
+
+        const userId = req.user.id; // ✅ Get user ID from token
+        console.log("🔹 Fetching booked events for user:", userId);
+
+        const bookedEvents = await Event.find({ bookings: userId });
+
+        res.status(200).json(bookedEvents);
+    } catch (error) {
+        console.error("❌ Error fetching booked events:", error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+});
 
 // Get Single Event
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
     try {
         const event = await Event.findById(req.params.id);
         if (!event) return res.status(404).json({ error: 'Event not found' });
@@ -58,7 +120,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update an Event (Protected)
-router.put('/:id', authMiddleware, async (req, res) => {
+router.put('/:id', async (req, res) => {
     try {
         const { title, description, location, date } = req.body;
         const updatedEvent = await Event.findByIdAndUpdate(
@@ -71,14 +133,16 @@ router.put('/:id', authMiddleware, async (req, res) => {
 });
 
 // Delete an Event (Protected)
-router.delete('/:id', authMiddleware, async (req, res) => {
+router.delete("/:id", async (req, res) => {
     try {
-        await Event.findByIdAndDelete(req.params.id);
-        res.json({ message: 'Event deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ error: 'Error deleting event' });
+        const deletedEvent = await Event.findByIdAndDelete(req.params.id);
+        if (!deletedEvent) return res.status(404).json({ message: "Event not found" });
+        res.json({ message: "Event deleted successfully" });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 });
+
 
 // Toggle favorite event
 router.post("/favorite/:eventId", async (req, res) => {
@@ -121,7 +185,7 @@ router.get("/:userId/favorites", async (req, res) => {
     }
 });
 
-router.put("/:id", authMiddleware, async (req, res) => {
+router.put("/:id", authenticate, authorizeAdmin, async (req, res) => {
     try {
         const { id } = req.params;
         const updatedEvent = await Event.findByIdAndUpdate(id, req.body, { new: true });

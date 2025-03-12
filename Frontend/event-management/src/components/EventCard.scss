@@ -141,3 +141,30 @@
 .cancel-btn:hover {
     background-color: #c82333;
 }
+
+.cancel-button {
+    padding: 10px 15px;
+    background: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.book-button {
+    padding: 10px 15px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.booked {
+    padding: 10px 15px;
+    background: #ccc;
+    color: white;
+    border: none;
+    cursor: not-allowed;
+    border-radius: 5px;
+}

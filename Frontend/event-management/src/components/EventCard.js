@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './EventCard.scss';
-function EventCard({ title, date, description, location, toggleFavorite, favorites, event, user, onUpdate, onDelete }) {
+function EventCard({ title, date, description, location, toggleFavorite, favorites, event, user, onUpdate, onDelete, bookEvent = null, bookedEvents = [] }) {
     const [isEditing, setIsEditing] = useState(false);
     // Convert date to YYYY-MM-DD format (needed for input[type="date"])
     const formattedDate = event.date ? new Date(event.date).toISOString().split("T")[0] : "";
@@ -16,8 +16,7 @@ function EventCard({ title, date, description, location, toggleFavorite, favorit
         setIsEditing(false);
     };
 
-
-
+    console.log(bookedEvents, event, 'kkkkkk')
     return (
         <div className="event-card" key={event._id}>
             {!isEditing ? (<><h3>{title}</h3>
@@ -25,7 +24,21 @@ function EventCard({ title, date, description, location, toggleFavorite, favorit
                 <p>{description}</p>
                 <p>{location}</p>
                 <div className='buttons'>
-                    {user && (
+                    {user?.role === 'user' && (bookedEvents.length > 0 &&
+                        bookedEvents?.some(eventObj => eventObj._id === event._id) ? (
+                        <button className="booked" disabled>
+                            Booked
+                        </button>
+                    ) : (
+                        <button
+                            onClick={() => bookEvent(event._id)}
+                            className="book-button"
+                        >
+                            Book Now
+                        </button>
+                    )
+                    )}
+                    {user?.role === 'user' && (
                         <button className='button favorite-btn' onClick={() => toggleFavorite(event._id)}>
                             {favorites.some(eventObj => {
                                 return eventObj._id === event._id
@@ -33,11 +46,11 @@ function EventCard({ title, date, description, location, toggleFavorite, favorit
                         </button>
 
                     )}
-                    {user && (
+                    {user?.role === 'admin' && (
                         <button className='button' onClick={() => setIsEditing(true)}>✏️ Edit</button>
                     )
                     }
-                    {user && (
+                    {user?.role === 'admin' && (
                         <button onClick={() => onDelete(event._id)} className="delete-btn">🗑️ Delete</button>
                     )
                     }

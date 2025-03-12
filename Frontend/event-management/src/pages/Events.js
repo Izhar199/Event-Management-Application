@@ -5,12 +5,15 @@ import './Events.scss'; // Make sure this is imported
 import Navbar from '../components/Navbar';
 import { AuthContext } from '../context/AuthContext';
 import Favorites from './Favorite';
+import BookedEvents from './BookedEvent';
 function Events() {
-    const { admin } = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
     const [events, setEvents] = useState([]);
     const [favorites, setFavorites] = useState([]);
+    const [bookedEvents, setBookedEvents] = useState([]);
     const [showForm, setShowForm] = useState(false);
     const [showFav, setShowFav] = useState(false);
+    const [showBooked, setShowBooked] = useState(false);
     const [newEvent, setNewEvent] = useState({
         title: '',
         date: '',
@@ -23,8 +26,12 @@ function Events() {
 
     useEffect(() => {
         fetchEvents();
-        if (admin) fetchFavorites();
-    }, [admin]);
+        if (user?.role === 'user') {
+            fetchFavorites();
+            fetchBookedEvents();
+        };
+    }, [user?.role]);
+    console.log(bookedEvents, 'bbbbbbbbbbbbb')
     const fetchEvents = async () => {
         try {
             const response = await axios.get("http://localhost:5000/api/events", {
@@ -33,6 +40,35 @@ function Events() {
             setEvents(response.data);
         } catch (error) {
             console.error("Error fetching events", error);
+        }
+    };
+    const bookEvent = async (id) => {
+        const token = localStorage.getItem("token")
+        const res = await fetch(`http://localhost:5000/api/events/${id}/book`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        });
+
+        const data = await res.json();
+        alert(data.message);
+        fetchBookedEvents()
+        // setEvents(events.map(event => event._id === id ? { ...event, booked: true } : event));
+    };
+    const fetchBookedEvents = async () => {
+        try {
+            const token = localStorage.getItem("token")
+            const response = await fetch("http://localhost:5000/api/events/booked", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+            });
+
+            const data = await response.json();
+            setBookedEvents(data); // ✅ Store in state
+        } catch (error) {
+            console.error("Error fetching booked events:", error);
         }
     };
     const fetchFavorites = async () => {
@@ -132,9 +168,21 @@ function Events() {
             <h1 className='header'>Event Management</h1>
 
             {/* Button to open the form */}
-            <button className="add-event" onClick={() => setShowForm(true)}>Add New Event</button>
-            <button className="add-event" onClick={() => setShowFav(true)}>Favorite</button>
-            {showFav && <button className="add-event" onClick={() => setShowFav(false)}>Show Events</button>}
+            {user?.role === 'admin' && <button className="add-event" onClick={() => setShowForm(true)}>Add New Event</button>}
+            {user?.role === 'user' && <button className="add-event" onClick={() => {
+                setShowFav(true);
+                setShowBooked(false)
+            }}>Favorite</button>}
+            {user?.role === 'user' && <button className="add-event" onClick={() => {
+                setShowFav(false)
+                setShowBooked(true)
+            }}>Booked Events</button>}
+            {(showFav || showBooked) && <button className="add-event" onClick={() => {
+                setShowBooked(false)
+                setShowFav(false)
+                fetchBookedEvents()
+                fetchFavorites()
+            }}>Show Events</button>}
             {/* Form to add a new event */}
             {showForm && (
                 <form onSubmit={handleSubmit}>
@@ -206,7 +254,7 @@ function Events() {
             </div>}
 
             {/* Display all events */}
-            {!showForm && !showFav && <div className="event-list">
+            {!showForm && !showFav && !showBooked && <div className="event-list">
                 {events.map((event, index) => (
                     <EventCard
                         key={index}
@@ -217,13 +265,17 @@ function Events() {
                         toggleFavorite={toggleFavorite}
                         favorites={favorites}
                         event={event}
-                        user={admin}
+                        user={user}
                         onUpdate={updateEvent}
                         onDelete={handleDelete}
+                        bookEvent={bookEvent}
+                        bookedEvents={bookedEvents}
+
                     />
                 ))}
             </div>}
-            {showFav && <Favorites />}
+            {showFav && !showBooked && <Favorites />}
+            {showBooked && !showFav && <BookedEvents />}
         </div>
     );
 }
