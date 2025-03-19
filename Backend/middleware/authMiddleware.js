@@ -8,11 +8,11 @@ const authenticate = (req, res, next) => {
 
         console.log("Decoded Token:", decoded); // 🔍 Debug log
 
-        if (!decoded.id) {
+        if (!decoded.id || !decoded.name) {
             return res.status(401).json({ message: "Invalid token: User ID missing" });
         }
 
-        req.user = decoded;
+        req.user = { id: decoded.id, name: decoded.name, role: decoded.role };
         next();
     } catch (err) {
         console.error("Auth Error:", err);

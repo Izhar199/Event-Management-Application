@@ -1,14 +1,55 @@
 /* General form styling */
 form {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
-    margin: 20px auto;
+    width: 350px;
+    margin: 50px auto;
     padding: 20px;
-    background-color: #f9f9f9;
+    background: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    h2 {
+        color: #2c8a42;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+
+        &:focus {
+            border-color: #2c8a42;
+            box-shadow: 0 0 5px rgba(44, 138, 66, 0.5);
+            outline: none;
+        }
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #007bff;
+        color: white;
+        margin-top: 10px;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+            background-color: #0056b3;
+        }
+    }
 }
+
 
 form div {
     margin-bottom: 16px;

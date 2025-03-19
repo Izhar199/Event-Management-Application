@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar';
 import { AuthContext } from '../context/AuthContext';
 import Favorites from './Favorite';
 import BookedEvents from './BookedEvent';
+import LiveChat from "../components/LiveChat";
 function Events() {
     const { user } = useContext(AuthContext);
     const [events, setEvents] = useState([]);
@@ -164,6 +165,7 @@ function Events() {
 
     return (
         <div className="App">
+            <LiveChat />
             <Navbar />
             <h1 className='header'>Event Management</h1>
 

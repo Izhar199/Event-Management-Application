@@ -17,7 +17,19 @@ router.post("/add", async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
+// GET /api/events/:id/comments → Get all comments for an event
+router.get("/:id/comments", async (req, res) => {
+    console.log(req.params.id, 'llllllllllll')
+    try {
+        const event = await Event.findById(req.params.id);
+        console.log(event, 'eeee')
+        if (!event) return res.status(404).json({ message: "Event not found" });
 
+        res.status(200).json(event.comments);
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error });
+    }
+});
 // Get All Events
 router.get('/', async (req, res) => {
     try {
@@ -65,6 +77,29 @@ router.delete("/:id/cancel", authenticate, async (req, res) => {
         res.status(500).json({ message: "Server error", error });
     }
 });
+
+router.post("/:id/comments", authenticate, async (req, res) => {
+    try {
+        const { text } = req.body;
+        const event = await Event.findById(req.params.id);
+
+        if (!event) return res.status(404).json({ message: "Event not found" });
+
+        const newComment = {
+            userId: req.user.id,
+            name: req.user.name,  // Ensure user data contains username
+            text,
+        };
+
+        event.comments.push(newComment);
+        await event.save();
+
+        res.status(201).json({ message: "Comment added", comment: newComment });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error });
+    }
+});
+
 //  Book an event
 router.post("/:id/book", authenticate, async (req, res) => {
     try {

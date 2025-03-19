@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './EventCard.scss';
+import CommentSection from "../pages/CommentSection";
 function EventCard({ title, date, description, location, toggleFavorite, favorites, event, user, onUpdate, onDelete, bookEvent = null, bookedEvents = [] }) {
     const [isEditing, setIsEditing] = useState(false);
     // Convert date to YYYY-MM-DD format (needed for input[type="date"])
@@ -16,14 +17,15 @@ function EventCard({ title, date, description, location, toggleFavorite, favorit
         setIsEditing(false);
     };
 
-    console.log(bookedEvents, event, 'kkkkkk')
+    console.log(bookedEvents, date, 'kkkkkk')
     return (
         <div className="event-card" key={event._id}>
             {!isEditing ? (<><h3>{title}</h3>
-                <p>{date}</p>
+                <p>{new Intl.DateTimeFormat("en-US", { dateStyle: "medium" }).format(new Date(date))}</p>
                 <p>{description}</p>
                 <p>{location}</p>
-                <div className='buttons'>
+
+                <div className='book-favorite-buttons'>
                     {user?.role === 'user' && (bookedEvents.length > 0 &&
                         bookedEvents?.some(eventObj => eventObj._id === event._id) ? (
                         <button className="booked" disabled>
@@ -55,6 +57,7 @@ function EventCard({ title, date, description, location, toggleFavorite, favorit
                     )
                     }
                 </div>
+                <CommentSection eventId={event._id} user={user} />
             </>) : (
                 <div className="modal">
                     <div className="modal-content">
