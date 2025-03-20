@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import axios from 'axios';
 import EventCard from "../components/EventCard";
+import './Favorite.scss';
 const Favorites = () => {
     const { user } = useContext(AuthContext);
     const [favorites, setFavorites] = useState([]);
@@ -63,7 +64,7 @@ const Favorites = () => {
     };
     return (
         <div>
-            <h2>My Favorite Events</h2>
+            <h2 className="fav-events">My Favorite Events</h2>
             <ul>
                 {favorites.length > 0 ? (
                     favorites.map((event, index) => (

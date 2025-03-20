@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import EventCard from "../components/EventCard";
 import { AuthContext } from '../context/AuthContext';
+import './BookedEvents.scss';
 const BookedEvents = () => {
     const { user } = useContext(AuthContext);
     const [bookedEvents, setBookedEvents] = useState([]);
@@ -50,7 +51,7 @@ const BookedEvents = () => {
     };
     return (
         <div>
-            <h2>My Booked Events</h2>
+            <h2 className="booked-evnts">My Booked Events</h2>
             {bookedEvents.length === 0 ? (
                 <p>No events booked yet.</p>
             ) : (

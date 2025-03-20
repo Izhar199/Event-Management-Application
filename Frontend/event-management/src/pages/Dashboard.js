@@ -11,9 +11,9 @@ function Dashboard() {
     if (!user) return <h2>Access Denied. Please Login.</h2>;
 
     return (
-        <div>
+        <div className='dashboard-container'>
             <Navbar />
-            <h1>{user.role === 'admin' ? 'Admin' : 'User'} Dashboard</h1>
+            <h1 className="header">{user.role === 'admin' ? 'Admin' : 'User'} Dashboard</h1>
             <LiveChat></LiveChat>
             <button className='events-btn' onClick={() => { navigate('/events'); }}>Events</button>
         </div>
