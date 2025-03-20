@@ -13,7 +13,7 @@ function Dashboard() {
     return (
         <div>
             <Navbar />
-            <h1>Dashboard</h1>
+            <h1>{user.role === 'admin' ? 'Admin' : 'User'} Dashboard</h1>
             <LiveChat></LiveChat>
             <button className='events-btn' onClick={() => { navigate('/events'); }}>Events</button>
         </div>

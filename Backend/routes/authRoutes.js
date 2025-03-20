@@ -22,11 +22,12 @@ router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
         const admin = await Admin.findOne({ email });
-
+        console.log(admin, 'ooooooooooooo')
         if (!admin) return res.status(400).json({ error: 'Invalid credentials' });
 
         // Compare passwords
         const isMatch = await bcrypt.compare(password, admin.password);
+        console.log(password, admin.password, 'jjjjjjjjjj')
         if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' });
 
         // Generate token
