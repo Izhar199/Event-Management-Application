@@ -1,0 +1,64 @@
+.profile-section {
+    border: 2px solid #007bff;
+    padding: 15px;
+    border-radius: 10px;
+    width: 50%;
+    margin: auto;
+    background-color: #f8f9fa;
+}
+
+.profile-button,
+.back-button {
+    display: inline-block;
+    padding: 10px 15px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+.profile-button:hover,
+.back-button:hover {
+    background-color: #0056b3;
+}
+
+.profile-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.profile-card {
+    background: linear-gradient(135deg, #007bff, #00c6ff);
+    /* Gradient Background */
+    color: white;
+    /* Text color */
+    padding: 25px;
+    border-radius: 15px;
+    /* Rounded corners */
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+    /* Soft shadow */
+    width: 300px;
+    /* Adjust width */
+    margin: auto;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    transition: transform 0.3s ease-in-out;
+}
+
+.profile-card:hover {
+    transform: scale(1.05);
+    /* Subtle hover effect */
+}
+
+.profile-card p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.profile-card strong {
+    font-size: 18px;
+    color: #ffdd57;
+    /* Highlight important text */
+}

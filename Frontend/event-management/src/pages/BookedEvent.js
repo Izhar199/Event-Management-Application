@@ -53,7 +53,7 @@ const BookedEvents = () => {
         <div>
             <h2 className="booked-evnts">My Booked Events</h2>
             {bookedEvents.length === 0 ? (
-                <p>No events booked yet.</p>
+                <p className="no-book">No events booked yet.</p>
             ) : (
                 <ul>
                     {bookedEvents?.map((event, index) => (

@@ -65,9 +65,10 @@ const Favorites = () => {
     return (
         <div>
             <h2 className="fav-events">My Favorite Events</h2>
-            <ul>
-                {favorites.length > 0 ? (
-                    favorites.map((event, index) => (
+
+            {favorites.length > 0 ? (
+                favorites.map((event, index) => (
+                    <ul>
                         <EventCard
                             key={index}
                             title={event.title}
@@ -81,11 +82,12 @@ const Favorites = () => {
                             bookEvent={bookEvent}
                             bookedEvents={bookedEvents}
                         />
-                    ))
-                ) : (
-                    <p>No favorite events yet.</p>
-                )}
-            </ul>
+                    </ul>
+                ))
+            ) : (
+                <p className="no-fav">No favorite events yet.</p>
+            )}
+
         </div>
     );
 };

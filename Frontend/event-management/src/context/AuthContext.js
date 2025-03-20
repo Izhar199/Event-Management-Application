@@ -28,7 +28,8 @@ export const AuthProvider = ({ children }) => {
             if (res.ok) {
                 localStorage.setItem("id", data.id);
                 localStorage.setItem("token", data.token);
-                localStorage.setItem("user", JSON.stringify({ email, role: data.role }));
+                console.log(data, 'dddddddddd')
+                localStorage.setItem("user", JSON.stringify({ email, role: data.role, name: data.name }));
                 setToken(data.token);
                 setUser({ email });
                 setRole(data.role);

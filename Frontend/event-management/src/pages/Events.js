@@ -35,9 +35,24 @@ function Events() {
     console.log(bookedEvents, 'bbbbbbbbbbbbb')
     const fetchEvents = async () => {
         try {
+            console.log(search, date, location, 'ppppppppp')
             const response = await axios.get("http://localhost:5000/api/events", {
                 params: { search, date, location }
             });
+            setEvents(response.data);
+        } catch (error) {
+            console.error("Error fetching events", error);
+        }
+    };
+    const resetEvents = async () => {
+        try {
+            console.log(search, date, location, 'ppppppppp')
+            const response = await axios.get("http://localhost:5000/api/events", {
+                params: { search: '', date: '', location: '' }
+            });
+            setSearch('')
+            setDate('')
+            setLocation('')
             setEvents(response.data);
         } catch (error) {
             console.error("Error fetching events", error);
@@ -253,6 +268,7 @@ function Events() {
                     onChange={(e) => setLocation(e.target.value)}
                 />
                 <button onClick={fetchEvents}>Search</button>
+                <button onClick={resetEvents}>Reset</button>
             </div>}
 
             {/* Display all events */}
